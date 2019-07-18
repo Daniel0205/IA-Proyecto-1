@@ -90,7 +90,7 @@ void leerArchivo(string fileName){
 
 int main(int argc, char **argv){
 
-	leerArchivo("nivel3.txt");
+	leerArchivo("nivel1.txt");
 
 	cout << "Posición del jugador: " << positions.top()[0] << "-" << positions.top()[1] << endl;
 
