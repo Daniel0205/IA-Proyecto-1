@@ -8,7 +8,7 @@
 
 using namespace std;
 
-string* table;
+vector<string> table;
 stack <int*> positions;
 stack <int**> boxes;
 int numBoxes;
@@ -30,12 +30,12 @@ void leerArchivo(string fileName){
 			
 		}		
 		file.push_back(texto);
+		if(endTable==0)table.push_back(texto);
 	}
 
 	tablero.close();
 
-	//La variable table guarda como tal la el tablero del juego, es almacenado en la pila states
-	table = new string [endTable];
+
 
 	//Se almacena la posición del jugador en las variables de arreglo
 
@@ -101,7 +101,7 @@ int main(int argc, char **argv){
 		
 	}	
 
-	for (int i = 0; i < table->size(); i++){
+	for (int i = 0; i < table.size(); i++){
 		cout << table[i] << endl;
 	}
 	
