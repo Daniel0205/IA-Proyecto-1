@@ -161,7 +161,6 @@ bool expand(int * posjugador, int ** posBoxes,char move){
 			else if(searchBox(posjugador[0]-1,posjugador[1], posBoxes) && table[posjugador[0]-2][posjugador[1]]=='W') return false;
 			else return true;
 		break;
-	
 
 	}
 	
@@ -207,6 +206,23 @@ void expandNode(){
 
 }
 
+bool isSolve(){
+
+	int ** actualBoxes=boxes.top();
+	int counting = 0;
+	
+	for (int i = 0; i < numBoxes; i++){
+		if(searchBox(targets[i][0],targets[i][1], actualBoxes)){
+			counting++;
+		}
+	}
+	
+	if(counting == numBoxes){
+		return true;
+	}else return false;
+	
+}
+
 
 int main(int argc, char **argv){
 
@@ -224,14 +240,25 @@ int main(int argc, char **argv){
 		cout << table[i] << endl;
 	}
 
+	bool x = isSolve();
+
+	if(x){
+		cout << "Listo" << endl;
+	}else{
+		cout << "O no funciona o no hay cajas ubicadas correctamente" << endl;
+	}
 
 	expandNode();
 
+
+	
 	for (int i = 0; i < positions.size(); i++){
 		cout << "Posición del jugador: " << positions.top()[0] << "-" << positions.top()[1] << endl;
 		positions.pop();
 		i--;
 	}
+	
+
 		
 
 }
