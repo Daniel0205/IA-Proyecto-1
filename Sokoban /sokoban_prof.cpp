@@ -35,8 +35,6 @@ void leerArchivo(string fileName){
 
 	tablero.close();
 
-
-
 	//Se almacena la posición del jugador en las variables de arreglo
 
 	int *pos = new int[2];
@@ -59,7 +57,7 @@ void leerArchivo(string fileName){
 	
 	// La ubicación de las cajas a mover se encuentran almacenadas en 
 
-	int ** cajasInit=new int*[(file.size() - (endTable+1))];
+	int ** cajasInit=new int*[(file.size() - (endTable))];
 	int bandera = 0;
 
 	for(int i = (endTable+1) ; i<file.size() ; i++){
@@ -81,9 +79,99 @@ void leerArchivo(string fileName){
 		bandera++;
 	}
 
+
 	numBoxes=(file.size() - (endTable+1));
 	
 	boxes.push(cajasInit);
+
+}
+
+bool finish(){
+
+	for (int i = 0; i < numBoxes; i++){
+		cout << "Posición de la caja "<< i+1 << ": " << boxes.top()[i][0] << "-" << boxes.top()[i][1] << endl;
+	}
+
+	return true;
+	
+}
+
+bool searchBox(int posF, int posC, int ** posBoxes){
+	
+	for (int i = 0; i < numBoxes; i++){
+		if(posBoxes[i][0]==posF && posBoxes[i][1]==posC)return true;
+	}
+	
+	return false;
+}
+
+bool expand(int * posjugador, int ** posBoxes,char move){
+
+	switch (move){
+		case 'R':
+			if(table[posjugador[0]][posjugador[1]+1]=='W') return false;
+			else if(searchBox(posjugador[0],posjugador[1]+1, posBoxes) && table[posjugador[0]][posjugador[1]+2]=='W') return false;
+			else return true;
+		break;
+		case 'L':
+			if(table[posjugador[0]][posjugador[1]-1]=='W') return false;
+			else if(searchBox(posjugador[0],posjugador[1]-1, posBoxes) && table[posjugador[0]][posjugador[1]-2]=='W') return false;
+			else return true;
+		break;
+		case 'D':
+			if(table[posjugador[0]+1][posjugador[1]]=='W') return false;
+			else if(searchBox(posjugador[0]+1,posjugador[1], posBoxes) && table[posjugador[0]+2][posjugador[1]]=='W') return false;
+			else return true;
+
+		break;
+		case 'U':
+			if(table[posjugador[0]-1][posjugador[1]]=='W') return false;
+			else if(searchBox(posjugador[0]-1,posjugador[1], posBoxes) && table[posjugador[0]-2][posjugador[1]]=='W') return false;
+			else return true;
+		break;
+	
+
+	}
+	
+
+
+}
+
+void expandNode(){
+	int * actualPos=positions.top();
+	int ** actualBox=boxes.top();
+
+	positions.pop();
+	boxes.pop();
+
+
+	if(expand(actualPos,actualBox,'R')){
+		cout << "R" << endl;
+		positions.push(new int[2]);
+		positions.top()[0]=actualPos[0];
+		positions.top()[1]=actualPos[1]+1;
+	}
+
+	if(expand(actualPos,actualBox,'L')){
+		cout << "L" << endl;
+		positions.push(new int[2]);
+		positions.top()[0]=actualPos[0];
+		positions.top()[1]=actualPos[1]-1;
+	}
+	
+	if(expand(actualPos,actualBox,'D')){
+		cout << "D" << endl;
+		positions.push(new int[2]);
+		positions.top()[0]=actualPos[0]+1;
+		positions.top()[1]=actualPos[1];
+	}
+
+	if(expand(actualPos,actualBox,'U')){
+		cout << "U" << endl;
+		positions.push(new int[2]);
+		positions.top()[0]=actualPos[0]-1;
+		positions.top()[1]=actualPos[1];
+	}
 
 }
 
@@ -92,21 +180,21 @@ int main(int argc, char **argv){
 
 	leerArchivo("nivel3.txt");
 
-	cout << "Posición del jugador: " << positions.top()[0] << "-" << positions.top()[1] << endl;
+	
 
-	for (int i = 0; i < numBoxes-1 ; i++){
-		
-		cout << "Posición de la caja "<< i+1 << ": " << boxes.top()[i][0] << "-" << boxes.top()[i][1] << endl;
-		
-		
-	}	
 
 	for (int i = 0; i < table.size(); i++){
 		cout << table[i] << endl;
 	}
-	
+
+
+	expandNode();
+
+	for (int i = 0; i < positions.size(); i++){
+		cout << "Posición del jugador: " << positions.top()[0] << "-" << positions.top()[1] << endl;
+		positions.pop();
+		i--;
+	}
+		
+
 }
-
-
-
-
