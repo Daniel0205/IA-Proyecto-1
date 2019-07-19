@@ -143,31 +143,64 @@ bool expand(int * posjugador, int ** posBoxes,char move){
 		case 'R':
 			if(table[posjugador[0]][posjugador[1]+1]=='W') return false;
 			else if(searchBox(posjugador[0],posjugador[1]+1, posBoxes) && table[posjugador[0]][posjugador[1]+2]=='W') return false;
+			else if(searchBox(posjugador[0],posjugador[1]+1, posBoxes) && searchBox(posjugador[0],posjugador[1]+2, posBoxes))  return false;
 			else return true;
 		break;
 		case 'L':
 			if(table[posjugador[0]][posjugador[1]-1]=='W') return false;
 			else if(searchBox(posjugador[0],posjugador[1]-1, posBoxes) && table[posjugador[0]][posjugador[1]-2]=='W') return false;
+			else if(searchBox(posjugador[0],posjugador[1]-1, posBoxes) && searchBox(posjugador[0],posjugador[1]-2, posBoxes))  return false;
 			else return true;
 		break;
 		case 'D':
 			if(table[posjugador[0]+1][posjugador[1]]=='W') return false;
 			else if(searchBox(posjugador[0]+1,posjugador[1], posBoxes) && table[posjugador[0]+2][posjugador[1]]=='W') return false;
+			else if(searchBox(posjugador[0]+1,posjugador[1], posBoxes) && searchBox(posjugador[0]+2,posjugador[1], posBoxes))  return false;
 			else return true;
 
 		break;
 		case 'U':
 			if(table[posjugador[0]-1][posjugador[1]]=='W') return false;
 			else if(searchBox(posjugador[0]-1,posjugador[1], posBoxes) && table[posjugador[0]-2][posjugador[1]]=='W') return false;
+			else if(searchBox(posjugador[0]-1,posjugador[1], posBoxes) && searchBox(posjugador[0]-2,posjugador[1], posBoxes))  return false;
 			else return true;
 		break;
 	
 
 	}
+
+	return false;
 	
 
 
 }
+
+int** moveBox(int posF, int posC, int ** posBoxes,char accion){
+	
+	for (int i = 0; i < numBoxes; i++){
+		if(posBoxes[i][0]==posF && posBoxes[i][1]==posC){
+			switch (accion){
+				case 'R':
+					posBoxes[i][1]=posBoxes[i][1]+1;
+				break;
+				case 'L':
+					posBoxes[i][1]=posBoxes[i][1]-1;
+				break;
+				case 'D':
+					posBoxes[i][0]=posBoxes[i][0]+1;
+				break;
+				case 'U':
+					posBoxes[i][0]=posBoxes[i][0]-1;
+				break;
+			}
+			return posBoxes;
+		}
+	}
+	return posBoxes;
+}
+
+
+
 
 void expandNode(){
 	int * actualPos=positions.top();
@@ -182,6 +215,7 @@ void expandNode(){
 		positions.push(new int[2]);
 		positions.top()[0]=actualPos[0];
 		positions.top()[1]=actualPos[1]+1;
+		boxes.push(moveBox(positions.top()[0],positions.top()[1],actualBox,'R'));
 	}
 
 	if(expand(actualPos,actualBox,'L')){
@@ -189,20 +223,25 @@ void expandNode(){
 		positions.push(new int[2]);
 		positions.top()[0]=actualPos[0];
 		positions.top()[1]=actualPos[1]-1;
+		boxes.push(moveBox(positions.top()[0],positions.top()[1],actualBox,'L'));
 	}
 	
-	if(expand(actualPos,actualBox,'D')){
-		cout << "D" << endl;
-		positions.push(new int[2]);
-		positions.top()[0]=actualPos[0]+1;
-		positions.top()[1]=actualPos[1];
-	}
+	
 
 	if(expand(actualPos,actualBox,'U')){
 		cout << "U" << endl;
 		positions.push(new int[2]);
 		positions.top()[0]=actualPos[0]-1;
 		positions.top()[1]=actualPos[1];
+		boxes.push(moveBox(positions.top()[0],positions.top()[1],actualBox,'U'));
+	}
+
+	if(expand(actualPos,actualBox,'D')){
+		cout << "D" << endl;
+		positions.push(new int[2]);
+		positions.top()[0]=actualPos[0]+1;
+		positions.top()[1]=actualPos[1];
+		boxes.push(moveBox(positions.top()[0],positions.top()[1],actualBox,'D'));
 	}
 
 }
@@ -212,20 +251,27 @@ int main(int argc, char **argv){
 
 	leerArchivo("nivel3.txt");
 
+
 	for (int i = 0; i < numBoxes; i++){
 		
 		cout << "Posición de la caja "<< i+1 << ": " << boxes.top()[i][0] << "-" << boxes.top()[i][1] << endl;
 		cout << "Posición del objetivo"<< i+1 << ": " << targets[i][0] << "-" << targets[i][1] << endl;
 		
 	}
-
-
+/*
 	for (int i = 0; i < table.size(); i++){
 		cout << table[i] << endl;
 	}
 
-
+*/
 	expandNode();
+
+	for (int i = 0; i < numBoxes; i++){
+		
+		cout << "Posición de la caja "<< i+1 << ": " << boxes.top()[i][0] << "-" << boxes.top()[i][1] << endl;
+		cout << "Posición del objetivo"<< i+1 << ": " << targets[i][0] << "-" << targets[i][1] << endl;
+		
+	}
 
 	for (int i = 0; i < positions.size(); i++){
 		cout << "Posición del jugador: " << positions.top()[0] << "-" << positions.top()[1] << endl;
