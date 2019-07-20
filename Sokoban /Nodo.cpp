@@ -1,12 +1,22 @@
 #include "Nodo.h"
 
-	Nodo::Nodo(){
-	}
-	Nodo::~Nodo(){}
 
-	bool Nodo::getEsHoja(){
-		return esHoja;
-	}
-	void Nodo::setEsHoja(bool newValue){
-		esHoja = newValue;
-	}
+
+Nodo::Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn,char accionIn,Nodo * padreIn){
+
+	posicionJugador = posicionJugadorIn;
+	posBoxes = cajasInitIn;
+	deep = profundidadIn;
+	accion = accionIn;
+	padre = padreIn;	
+}
+
+Nodo::~Nodo(){}
+
+int  Nodo::getPosPlayer(int i){
+	return posicionJugador[i];
+}
+
+int Nodo::getPosBoxes(int f, int c){
+	return posBoxes[f][c];
+}

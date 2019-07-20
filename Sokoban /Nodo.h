@@ -7,17 +7,18 @@ using namespace std;
 
 class Nodo{
     private:
-        int *posicionJugador = new int[2];
-        int ** cajasInit;
-        int **objetivos;
+        Nodo * padre;
+        int * posicionJugador = new int[2];
+        int ** posBoxes;
+        int deep;
+        char accion;
         bool esHoja; 
-        vector<Nodo> children;
     public:
-        Nodo();
+        Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn,char accionIn,Nodo *padreIn);
         ~Nodo();
+        int getPosPlayer(int i);
+        int getPosBoxes(int f, int c);
 
-        bool getEsHoja();
-        void setEsHoja(bool newValue);
 };
 
 #endif

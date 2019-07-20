@@ -4,13 +4,14 @@
 #include <stack>
 #include <vector>
 #include <sstream>
+#include "Nodo.h"
 
 
 using namespace std;
 
 string* table;
-stack <int*> positions;
-stack <int**> boxes;
+stack <Nodo *> nodes;
+
 int numBoxes;
 
 
@@ -54,7 +55,6 @@ void leerArchivo(string fileName){
 	pos[0] = stoi(posicionJu[0]);
 	pos[1] = stoi(posicionJu[1]);
 
-	positions.push(pos);
 
 	
 	// La ubicación de las cajas a mover se encuentran almacenadas en 
@@ -83,7 +83,10 @@ void leerArchivo(string fileName){
 
 	numBoxes=(file.size() - (endTable+1));
 	
-	boxes.push(cajasInit);
+
+	Nodo * node = new Nodo(pos,cajasInit,0,NULL,NULL);
+
+	nodes.push(node);
 
 }
 
@@ -92,11 +95,11 @@ int main(int argc, char **argv){
 
 	leerArchivo("nivel1.txt");
 
-	cout << "Posición del jugador: " << positions.top()[0] << "-" << positions.top()[1] << endl;
+	cout << "Posición del jugador: " << nodes.top()->getPosPlayer(0) << "-" << nodes.top()->getPosPlayer(1) << endl;
 
 	for (int i = 0; i < numBoxes-1 ; i++){
 		
-		cout << "Posición de la caja "<< i+1 << ": " << boxes.top()[i][0] << "-" << boxes.top()[i][1] << endl;
+		cout << "Posición de la caja "<< i+1 << ": " << nodes.top()->getPosBoxes(i,0) << "-" << nodes.top()->getPosBoxes(i,1) << endl;
 		
 		
 	}	
