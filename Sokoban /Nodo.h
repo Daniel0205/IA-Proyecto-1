@@ -8,22 +8,20 @@ using namespace std;
 
 class Nodo{
     private:
-        Nodo * padre = NULL ;
         int * posicionJugador = new int[2];
         int ** posBoxes;
         int deep;
-        char accion = 0;
+        string path = "";
         bool esHoja; 
     public:
         Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn);
-        Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn,char accionIn,Nodo *padreIn);
+        Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn,string camino);
         ~Nodo();
         int getPosPlayer(int i);
         int getPosBoxes(int f, int c);
         int getProf();
-        void getPath();
-        Nodo * getPadre();
-        
+        string getPath(); 
+        void borrar();       
 
 };
 

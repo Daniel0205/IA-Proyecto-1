@@ -1,5 +1,7 @@
 #include "Nodo.h"
 
+
+
 Nodo::Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn){
 
 	posicionJugador = posicionJugadorIn;
@@ -9,16 +11,25 @@ Nodo::Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn){
 }
 
 
-Nodo::Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn,char accionIn,Nodo * padreIn){
+Nodo::Nodo(int * posicionJugadorIn,int ** cajasInitIn, int profundidadIn,string camino){
 
 	posicionJugador = posicionJugadorIn;
 	posBoxes = cajasInitIn;
 	deep = profundidadIn;
-	accion = accionIn;
-	padre = padreIn;	
+	path = camino;
 }
 
-Nodo::~Nodo(){}
+Nodo::~Nodo(){
+	
+}
+
+void Nodo::borrar(){
+	delete [] posicionJugador;
+	
+	delete [] posBoxes;
+
+	
+}
 
 int  Nodo::getPosPlayer(int i){
 	return posicionJugador[i];
@@ -32,18 +43,7 @@ int Nodo::getProf(){
 	return deep;
 }
 
-void Nodo::getPath(){
-	
-	if(padre==NULL) {
-		cout << accion << endl;
-	}
-	else {
-		padre->getPath();
-		cout << accion << endl;
-		 
-	}
+string Nodo::getPath(){
+	return path;
 }
 
-Nodo * Nodo::getPadre(){
-	return padre;
-}

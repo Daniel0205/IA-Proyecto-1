@@ -6,7 +6,8 @@
 #include <vector>
 #include <sstream>
 #include "Nodo.h"
-#include "Agente.h"
+//#include "Agente.h"
+#include "AgenteDFS.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ int numBoxes;
 
 vector <string> table;
 
-Agente * agent; 
+AgenteDFS * agent; 
 
 void leerArchivo(string fileName){
 		
@@ -83,7 +84,7 @@ void leerArchivo(string fileName){
 
 	numBoxes=(file.size() - (endTable+1));
 	
-	agent = new Agente(file.size() - (endTable+1),pos,cajasInit,&table);	
+	agent = new AgenteDFS(file.size() - (endTable+1),pos,cajasInit,&table);	
 
 }
 
@@ -91,7 +92,7 @@ void leerArchivo(string fileName){
 
 int main(int argc, char **argv){
 
-	leerArchivo("nivel1.txt");
+	leerArchivo("nivel3.txt");
 
 	agent->identifyTargets();
 
