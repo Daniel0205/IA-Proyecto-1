@@ -145,16 +145,30 @@ void AgenteBFS::expandNode(){
 	
 	nodes.pop();
 
-	
-	if(expand(actualNode,'R')){
-		//cout << "R" << endl;
+	if(expand(actualNode,'U')){
+		//cout << "U" << endl;
 		int * pos = new int [2];
-		pos[0]=actualNode->getPosPlayer(0);
-		pos[1]=actualNode->getPosPlayer(1)+1;
+		pos[0]=actualNode->getPosPlayer(0)-1;
+		pos[1]=actualNode->getPosPlayer(1);
+
+		int** boxes =moveBox(actualNode,pos,'U');
 		
-		int** boxes =moveBox(actualNode,pos,'R');
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-R"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U"));
+			nodes.push(node);
+		}
+	}
+
+	if(expand(actualNode,'D')){
+		//cout << "D" << endl;
+		int * pos = new int [2];
+		pos[0]=actualNode->getPosPlayer(0)+1;
+		pos[1]=actualNode->getPosPlayer(1);
+
+		int** boxes =moveBox(actualNode,pos,'D');
+		
+		if(checkExplored(pos,boxes)){
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-D"));
 			nodes.push(node);
 		}
 	}
@@ -172,38 +186,20 @@ void AgenteBFS::expandNode(){
 			nodes.push(node);
 		}
 	}
-	
-	
-	if(expand(actualNode,'U')){
-		//cout << "U" << endl;
-		int * pos = new int [2];
-		pos[0]=actualNode->getPosPlayer(0)-1;
-		pos[1]=actualNode->getPosPlayer(1);
 
-		int** boxes =moveBox(actualNode,pos,'U');
+	
+	if(expand(actualNode,'R')){
+		//cout << "R" << endl;
+		int * pos = new int [2];
+		pos[0]=actualNode->getPosPlayer(0);
+		pos[1]=actualNode->getPosPlayer(1)+1;
 		
+		int** boxes =moveBox(actualNode,pos,'R');
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-R"));
 			nodes.push(node);
 		}
-	}
-		
-
-	if(expand(actualNode,'D')){
-		//cout << "D" << endl;
-		int * pos = new int [2];
-		pos[0]=actualNode->getPosPlayer(0)+1;
-		pos[1]=actualNode->getPosPlayer(1);
-
-		int** boxes =moveBox(actualNode,pos,'D');
-		
-		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-D"));
-			nodes.push(node);
-		}
-	}
-	cout << "entro" <<endl;
-
+	}	
 
 }
 

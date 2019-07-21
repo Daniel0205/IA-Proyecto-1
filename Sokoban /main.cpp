@@ -18,6 +18,8 @@ vector <string> table;
 
 AgenteBFS * agent; 
 
+
+
 void leerArchivo(string fileName){
 		
 	ifstream tablero(fileName);
@@ -92,6 +94,8 @@ void leerArchivo(string fileName){
 
 
 int main(int argc, char **argv){
+
+	
 
 	leerArchivo("nivel4.txt");
 

@@ -146,7 +146,6 @@ void AgenteDFS::expandNode(){
 	
 	nodes.pop();
 
-	
 	if(expand(actualNode,'R')){
 		//cout << "R" << endl;
 		int * pos = new int [2];
@@ -173,22 +172,6 @@ void AgenteDFS::expandNode(){
 			nodes.push(node);
 		}
 	}
-	
-	
-	if(expand(actualNode,'U')){
-		//cout << "U" << endl;
-		int * pos = new int [2];
-		pos[0]=actualNode->getPosPlayer(0)-1;
-		pos[1]=actualNode->getPosPlayer(1);
-
-		int** boxes =moveBox(actualNode,pos,'U');
-		
-		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U"));
-			nodes.push(node);
-		}
-	}
-		
 
 	if(expand(actualNode,'D')){
 		//cout << "D" << endl;
@@ -203,9 +186,20 @@ void AgenteDFS::expandNode(){
 			nodes.push(node);
 		}
 	}
-	cout << "entro" <<endl;
 
+	if(expand(actualNode,'U')){
+		//cout << "U" << endl;
+		int * pos = new int [2];
+		pos[0]=actualNode->getPosPlayer(0)-1;
+		pos[1]=actualNode->getPosPlayer(1);
 
+		int** boxes =moveBox(actualNode,pos,'U');
+		
+		if(checkExplored(pos,boxes)){
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U"));
+			nodes.push(node);
+		}
+	}
 }
 
 bool AgenteDFS::isSolve(){
