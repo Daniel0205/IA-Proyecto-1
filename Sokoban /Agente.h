@@ -2,7 +2,8 @@
 #define AGENTE_H
 #include <string>
 #include <vector>
-#include <stack>
+//#include <stack>
+#include <queue>
 #include "Nodo.h"
 
 #include <iostream>
@@ -12,7 +13,8 @@ using namespace std;
 class Agente{
     private:
         vector <string> table;
-        stack <Nodo *> nodes;
+        queue <Nodo *> nodes;
+        //stack <Nodo *> nodesProf;
         int numBoxes;
         int **targets;
 
@@ -23,6 +25,7 @@ class Agente{
         bool searchBox(int posF, int posC, Nodo * node);
         bool expand(Nodo * node ,char move);
         int** moveBox(Nodo * node,int * pos,char accion);
+        bool checkObstacle(int posF,int posC,Nodo * node);
         bool isSolve();
         void expandNode();
 

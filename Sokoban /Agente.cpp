@@ -3,6 +3,7 @@
 Agente::Agente(int numBoxesIn, int* pos, int ** cajasInit,vector<string> *tableIn){	
 	table=*tableIn;
     numBoxes=numBoxesIn;
+	
     
     Nodo * node = new Nodo(pos,cajasInit,0);
 
@@ -37,12 +38,31 @@ void Agente::identifyTargets(){
 }
 
 bool Agente::searchBox(int posF, int posC, Nodo * node){
+
+	//cout << "profundidad:" <<  node->getProf() <<endl;
+	/*
+	for (int  i = 0; i < numBoxes; i++){
+		
+		cout << node->getPosBoxes(i,0) << "-" << node->getPosBoxes(i,1) << endl;
+	}
+ */	
 	
 	for (int i = 0; i < numBoxes; i++){
+		
 		if(node->getPosBoxes(i,0)==posF && node->getPosBoxes(i,1)==posC)return true;
 	}
 	
 	return false;
+}
+
+bool Agente::checkObstacle(int posF,int posC,Nodo * node){
+	if(posF<0 || posC<0 || posF>=table.size() || posC>=table[0].length())return true;
+	else if(table[posF][posC]=='W' || searchBox(posF,posC, node)){
+		return true;
+	}
+	else return false;
+
+
 }
 
 bool Agente::expand(Nodo * node ,char move){
@@ -50,27 +70,23 @@ bool Agente::expand(Nodo * node ,char move){
 	switch (move){
 		case 'R':
 			if(table[node->getPosPlayer(0)][node->getPosPlayer(1)+1]=='W') return false;
-			else if(searchBox(node->getPosPlayer(0),node->getPosPlayer(1)+1, node) && table[node->getPosPlayer(0)][node->getPosPlayer(1)+2]=='W') return false;
-			else if(searchBox(node->getPosPlayer(0),node->getPosPlayer(1)+1, node) && searchBox(node->getPosPlayer(0),node->getPosPlayer(1)+2, node))  return false;
+			else if(searchBox(node->getPosPlayer(0),node->getPosPlayer(1)+1, node) && checkObstacle(node->getPosPlayer(0),node->getPosPlayer(1)+2,node)) return false;
 			else return true;
 		break;
 		case 'L':
 			if(table[node->getPosPlayer(0)][node->getPosPlayer(1)-1]=='W') return false;
-			else if(searchBox(node->getPosPlayer(0),node->getPosPlayer(1)-1, node) && table[node->getPosPlayer(0)][node->getPosPlayer(1)-2]=='W') return false;
-			else if(searchBox(node->getPosPlayer(0),node->getPosPlayer(1)-1, node) && searchBox(node->getPosPlayer(0),node->getPosPlayer(1)-2, node))  return false;
+			else if(searchBox(node->getPosPlayer(0),node->getPosPlayer(1)-1, node) && checkObstacle(node->getPosPlayer(0),node->getPosPlayer(1)-2,node)) return false;
 			else return true;
 		break;
 		case 'D':
 			if(table[node->getPosPlayer(0)+1][node->getPosPlayer(1)]=='W') return false;
-			else if(searchBox(node->getPosPlayer(0)+1,node->getPosPlayer(1), node) && table[node->getPosPlayer(0)+2][node->getPosPlayer(1)]=='W') return false;
-			else if(searchBox(node->getPosPlayer(0)+1,node->getPosPlayer(1), node) && searchBox(node->getPosPlayer(0)+2,node->getPosPlayer(1), node))  return false;
+			else if(searchBox(node->getPosPlayer(0)+1,node->getPosPlayer(1), node) && checkObstacle(node->getPosPlayer(0)+2,node->getPosPlayer(1),node)) return false;
 			else return true;
 	
 		break;
 		case 'U':
 			if(table[node->getPosPlayer(0)-1][node->getPosPlayer(1)]=='W') return false;
-			else if(searchBox(node->getPosPlayer(0)-1,node->getPosPlayer(1), node) && table[node->getPosPlayer(0)-2][node->getPosPlayer(1)]=='W') return false;
-			else if(searchBox(node->getPosPlayer(0)-1,node->getPosPlayer(1), node) && searchBox(node->getPosPlayer(0)-2,node->getPosPlayer(1), node))  return false;
+			else if(searchBox(node->getPosPlayer(0)-1,node->getPosPlayer(1), node) && checkObstacle(node->getPosPlayer(0)-2,node->getPosPlayer(1),node)) return false;
 			else return true;
 		break;
 
@@ -103,16 +119,19 @@ int** Agente::moveBox(Nodo * node,int * pos,char accion){
 					newBoxes[i][0]=newBoxes[i][0]-1;
 				break;
 			}
-			return newBoxes;
 		}
 	}
+	
+
 	return newBoxes;
 }
 
 
 
 void Agente::expandNode(){
-	Nodo * actualNode=nodes.top();
+	
+	Nodo * actualNode=nodes.front();
+		
 
 	nodes.pop();
 
@@ -163,12 +182,15 @@ void Agente::expandNode(){
 bool Agente::isSolve(){
 	int counting = 0;
 	
+
 	for (int i = 0; i < numBoxes; i++){
-		if(searchBox(targets[i][0],targets[i][1], nodes.top())){
+		
+		if(searchBox(targets[i][0],targets[i][1], nodes.front())){
 			counting++;
 		}
+		
 	}
-	
+		
 	if(counting == numBoxes){
 		return true;
 	}else return false;
@@ -177,11 +199,11 @@ bool Agente::isSolve(){
 
 
 void Agente::iniciarBusqueda(){
-    	cout << "Posición del jugador: " << nodes.top()->getPosPlayer(0) << "-" << nodes.top()->getPosPlayer(1) << endl;
+    	cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
 
 	for (int i = 0; i < numBoxes; i++){
 		
-		cout << "Posición de la caja "<< i+1 << ": " << nodes.top()->getPosBoxes(i,0) << "-" << nodes.top()->getPosBoxes(i,1) << endl;
+		cout << "Posición de la caja "<< i+1 << ": " << nodes.front()->getPosBoxes(i,0) << "-" << nodes.front()->getPosBoxes(i,1) << endl;
 		cout << "Posición del objetivo"<< i+1 << ": " << targets[i][0] << "-" << targets[i][1] << endl;
 		
 	}
@@ -191,23 +213,29 @@ void Agente::iniciarBusqueda(){
 	}
 	
 
-	bool x = isSolve();
 
-	if(x){
-		cout << "Listo" << endl;
-	}else{
-		cout << "O no funciona o no hay cajas ubicadas correctamente" << endl;
+	while(!isSolve()){
+		//cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
+		expandNode();
+		//cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
+
+
+
 	}
 
-	expandNode();
-
+	cout << "CAMINO:" << endl;
+	nodes.front()->getPath();
 	
-	
+	/*
 	for (int i = 0; i < nodes.size(); i++){
-		cout << "Posición de la caja "<< i+1 << ": " << nodes.top()->getPosBoxes(i,0) << "-" << nodes.top()->getPosBoxes(i,1) << endl;
+		for (int j = 0; j < numBoxes; j++){
+			cout << "Posición de la caja "<< j+1 << ": " << nodes.front()->getPosBoxes(j,0) << "-" << nodes.front()->getPosBoxes(j,1) << endl;
+		}
+		cout << "--------------------" << endl;
+		
 		nodes.pop();
 		i--;
 		
-	}	
+	}	*/
 
 }

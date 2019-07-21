@@ -31,3 +31,19 @@ int Nodo::getPosBoxes(int f, int c){
 int Nodo::getProf(){
 	return deep;
 }
+
+void Nodo::getPath(){
+	
+	if(padre==NULL) {
+		cout << accion << endl;
+	}
+	else {
+		padre->getPath();
+		cout << accion << endl;
+		 
+	}
+}
+
+Nodo * Nodo::getPadre(){
+	return padre;
+}

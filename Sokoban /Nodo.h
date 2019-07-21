@@ -2,6 +2,7 @@
 #define NODO_H
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -20,6 +21,8 @@ class Nodo{
         int getPosPlayer(int i);
         int getPosBoxes(int f, int c);
         int getProf();
+        void getPath();
+        Nodo * getPadre();
         
 
 };

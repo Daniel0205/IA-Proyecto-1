@@ -83,11 +83,7 @@ void leerArchivo(string fileName){
 
 	numBoxes=(file.size() - (endTable+1));
 	
-	agent = new Agente(file.size() - (endTable+1),pos,cajasInit,&table);
-
-	//Se guardaraán las posiciones de los objetivos en el arreglo "targets"
-
-	agent->identifyTargets();
+	agent = new Agente(file.size() - (endTable+1),pos,cajasInit,&table);	
 
 }
 
@@ -96,6 +92,8 @@ void leerArchivo(string fileName){
 int main(int argc, char **argv){
 
 	leerArchivo("nivel3.txt");
+
+	agent->identifyTargets();
 
 	agent->iniciarBusqueda();
 
