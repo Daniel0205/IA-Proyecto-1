@@ -12,19 +12,19 @@ Agente::Agente(int numBoxesIn, int* pos, int ** cajasInit,vector<string> *tableI
 
 Agente::~Agente(){}
 
+//Esta función identifica las posiciones de los objetivos a los que deben llegar las cajas
 void Agente::identifyTargets(){
 	
 	int band=0;
 
 	targets = new int*[numBoxes];
-	for (int i = 0; i < numBoxes; i++){
-		targets[i] = new int[2];
-	}
-	
 
 	for (int i = 0; i < table.size(); i++){
 		for (int j = 0; j < table[i].size(); j++){
+
 			if (table[i][j]=='X'){
+
+				targets[band] = new int[2];
 
 				targets[band][0] = i;
 				targets[band][1] = j;
@@ -61,7 +61,6 @@ bool Agente::checkObstacle(int posF,int posC,Nodo * node){
 		return true;
 	}
 	else return false;
-
 
 }
 
@@ -136,7 +135,7 @@ void Agente::expandNode(){
 	nodes.pop();
 
 	if(expand(actualNode,'R')){
-		cout << "R" << endl;
+		//cout << "R" << endl;
 		int * pos = new int [2];
 		pos[0]=actualNode->getPosPlayer(0);
 		pos[1]=actualNode->getPosPlayer(1)+1;
@@ -146,7 +145,7 @@ void Agente::expandNode(){
 	}
 
 	if(expand(actualNode,'L')){
-		cout << "L" << endl;
+		//cout << "L" << endl;
 		int * pos = new int [2];
 		pos[0]=actualNode->getPosPlayer(0);
 		pos[1]=actualNode->getPosPlayer(1)-1;
@@ -158,7 +157,7 @@ void Agente::expandNode(){
 	
 
 	if(expand(actualNode,'U')){
-		cout << "U" << endl;
+		//cout << "U" << endl;
 		int * pos = new int [2];
 		pos[0]=actualNode->getPosPlayer(0)-1;
 		pos[1]=actualNode->getPosPlayer(1);
@@ -168,7 +167,7 @@ void Agente::expandNode(){
 	}
 
 	if(expand(actualNode,'D')){
-		cout << "D" << endl;
+		//cout << "D" << endl;
 		int * pos = new int [2];
 		pos[0]=actualNode->getPosPlayer(0)+1;
 		pos[1]=actualNode->getPosPlayer(1);
@@ -199,7 +198,8 @@ bool Agente::isSolve(){
 
 
 void Agente::iniciarBusqueda(){
-    	cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
+    
+	cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
 
 	for (int i = 0; i < numBoxes; i++){
 		
