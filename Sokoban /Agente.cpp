@@ -39,14 +39,6 @@ void Agente::identifyTargets(){
 
 bool Agente::searchBox(int posF, int posC, Nodo * node){
 
-	//cout << "profundidad:" <<  node->getProf() <<endl;
-	/*
-	for (int  i = 0; i < numBoxes; i++){
-		
-		cout << node->getPosBoxes(i,0) << "-" << node->getPosBoxes(i,1) << endl;
-	}
- */	
-	
 	for (int i = 0; i < numBoxes; i++){
 		
 		if(node->getPosBoxes(i,0)==posF && node->getPosBoxes(i,1)==posC)return true;
@@ -208,13 +200,14 @@ void Agente::iniciarBusqueda(){
 		
 	}
 
-	for (int i = 0; i < table.size(); i++){
-		cout << table[i] << endl;
+
+
+	for (int i = 0; i < numBoxes; i++){
+		cout << targets[i][0] <<"-" << targets[i][1] << endl;
 	}
 	
-
-
 	while(!isSolve()){
+		cout << "Profundidad: " << nodes.front()->getProf() << endl;
 		//cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
 		expandNode();
 		//cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;

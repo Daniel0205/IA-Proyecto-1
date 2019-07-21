@@ -91,11 +91,10 @@ void leerArchivo(string fileName){
 
 int main(int argc, char **argv){
 
-	leerArchivo("nivel3.txt");
+	leerArchivo("nivel1.txt");
 
 	agent->identifyTargets();
 
 	agent->iniciarBusqueda();
-
 
 }
