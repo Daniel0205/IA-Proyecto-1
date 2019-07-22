@@ -94,62 +94,20 @@ void leerArchivo(string fileName){
 
 int main(int argc, char **argv){
 
-	if(argc!=2) {
-		cout << "Digite el nombre del archivo" ;
-		return 0;
-	}
-
 	leerArchivo(argv[1]);
 
-	cout << "Campo de juego:" << endl;
 
-	for (int i = 0; i < table.size(); i++){
-		cout << table[i] << endl;
-	}
-	cout << "Posicion del jugador [Fila, Columna]: "  << "[" << pos[0] << "," << pos[1] << "]"  << endl;
-	
-	cout << "Posicion de las cajas [Fila, Columna]: ";
-	for (int i = 0; i < numBoxes; i++){
-		cout << "[" << cajasInit[i][0] << "," << cajasInit[i][1] << "] " ;
-	}
+		
+	agentBFS = new AgenteBFS(numBoxes,pos,cajasInit,&table);
+	agentBFS->identifyTargets();
+	cout << agentBFS->iniciarBusqueda() << endl;	
 
-	cout << endl << endl;
-	cout << "SELECCIONE EL NUMERO DEL TIPO DE BUSQUEDA:" << endl;
-	cout << "1-PREFERENTE POR PROFUNDIDAD" << endl;
-	cout << "2-PREFERENTE POR AMPLITUD" << endl;
-	cout << "3-PROFUNDIDAD ITERATIVA" << endl  << endl ;
-
-	cin >> search;
+	agentDFS = new AgenteDFS(numBoxes,pos,cajasInit,&table);
+	agentDFS->identifyTargets();
+	cout << agentDFS->iniciarBusqueda() << endl;	
 	
-	cout << "CAMINO:" << endl;
-	switch (search){
-		case 1:
-			agentDFS = new AgenteDFS(numBoxes,pos,cajasInit,&table);
-			agentDFS->identifyTargets();
-			cout << agentDFS->iniciarBusqueda() << endl;	
-			break;
-		case 2:
-			agentBFS = new AgenteBFS(numBoxes,pos,cajasInit,&table);
-			agentBFS->identifyTargets();
-			cout << agentBFS->iniciarBusqueda() << endl;	
-			break;
-		case 3:
-			agentIDFS = new AgenteIDFS(numBoxes,pos,cajasInit,&table);	
-			agentIDFS->identifyTargets();
-			cout << agentIDFS->iniciarBusqueda() << endl;
-			break;
-		default:
-			cout << "Tipo de busqueda invalida." << endl;
-			break;
-
-	}
-	
-	cout << "Fin." << endl;
-
-	
-	
-	
-
-	
+	agentIDFS = new AgenteIDFS(numBoxes,pos,cajasInit,&table);	
+	agentIDFS->identifyTargets();
+	cout << agentIDFS->iniciarBusqueda() << endl;
 
 }

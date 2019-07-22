@@ -142,6 +142,11 @@ bool AgenteIDFS::checkExplored(int* pos, int ** boxes){
 
 void AgenteIDFS::expandNode(){
 
+	if(nodes.top()->getProf()>=64){
+		nodes.pop();
+		return;
+	}
+
 	explored.push_back(nodes.top());
 
 	
@@ -158,7 +163,7 @@ void AgenteIDFS::expandNode(){
 		
 		int** boxes =moveBox(actualNode,pos,'R');
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-R:Derecha \n"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("R"));
 			nodes.push(node);
 		}
 	}	
@@ -173,7 +178,7 @@ void AgenteIDFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'L');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-L:Izquierda \n"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("L"));
 			nodes.push(node);
 		}
 	}
@@ -187,7 +192,7 @@ void AgenteIDFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'D');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-D:Abajo \n"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("D"));
 			nodes.push(node);
 		}
 	}
@@ -201,7 +206,7 @@ void AgenteIDFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'U');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U:Arriba \n"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("U"));
 			nodes.push(node);
 		}
 	}
