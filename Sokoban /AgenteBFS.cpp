@@ -154,7 +154,7 @@ void AgenteBFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'U');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U:Arriba \n"));
 			nodes.push(node);
 		}
 	}
@@ -168,7 +168,7 @@ void AgenteBFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'D');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-D"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-D:Abajo \n"));
 			nodes.push(node);
 		}
 	}
@@ -182,7 +182,7 @@ void AgenteBFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'L');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-L"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-L:Izquierda \n"));
 			nodes.push(node);
 		}
 	}
@@ -196,7 +196,7 @@ void AgenteBFS::expandNode(){
 		
 		int** boxes =moveBox(actualNode,pos,'R');
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-R"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-R:Derecha \n"));
 			nodes.push(node);
 		}
 	}	
@@ -222,21 +222,16 @@ bool AgenteBFS::isSolve(){
 }
 
 
-void AgenteBFS::iniciarBusqueda(){
+string AgenteBFS::iniciarBusqueda(){
 
-
-
-	for (int i = 0; i < numBoxes; i++){
-		cout << targets[i][0] <<"-" << targets[i][1] << endl;
-	}
 	
 	while(!isSolve()){
 		explored.push_back(nodes.front());
-		cout << "Profundidad: " << nodes.front()->getProf() << endl;
+		
 		expandNode();
 	}
 
-	cout << "CAMINO:" << endl;
-	cout <<	nodes.front()->getPath() << endl; 
+	
+	return	nodes.front()->getPath(); 
 	
 }

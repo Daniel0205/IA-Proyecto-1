@@ -2,7 +2,6 @@
 #define AGENTEBFS_H
 #include <string>
 #include <vector>
-//#include <stack>
 #include <queue>
 #include "Nodo.h"
 
@@ -15,7 +14,6 @@ class AgenteBFS{
         vector <string> table;
         queue <Nodo *> nodes;
         vector <Nodo *> explored;
-        //stack <Nodo *> nodesProf;
         int numBoxes;
         int **targets;
 
@@ -33,7 +31,7 @@ class AgenteBFS{
         bool checkExplored(int* pos, int ** boxes);
         bool checkExploredBoxes(Nodo * node, int ** boxes);
 
-        void iniciarBusqueda();
+        string iniciarBusqueda();
        
 
 };

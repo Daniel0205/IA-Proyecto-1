@@ -31,7 +31,7 @@ class AgenteDFS{
         bool checkExplored(int* pos, int ** boxes);
         bool checkExploredBoxes(Nodo * node, int ** boxes);
 
-        void iniciarBusqueda();
+        string iniciarBusqueda();
        
 
 };
