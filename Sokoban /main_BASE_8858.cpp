@@ -15,13 +15,8 @@ using namespace std;
 int numBoxes;
 
 vector <string> table;
-int ** cajasInit;
-int *pos;
-int search=0;
 
-
-AgenteIDFS * agent; 
-
+AgenteBFS * agent; 
 
 void leerArchivo(string fileName){
 		
@@ -46,7 +41,7 @@ void leerArchivo(string fileName){
 
 	//Se almacena la posición del jugador en las variables de arreglo
 
-	pos = new int[2];
+	int *pos = new int[2];
 	
 	vector <string> posicionJu; 
     stringstream check1(file[endTable]);
@@ -65,7 +60,7 @@ void leerArchivo(string fileName){
 	
 	// La ubicación de las cajas a mover se encuentran almacenadas en cajasInit
 
-	cajasInit=new int*[(file.size() - (endTable))];
+	int ** cajasInit=new int*[(file.size() - (endTable))];
 	int bandera = 0;
 
 	for(int i = (endTable+1) ; i<file.size() ; i++){
@@ -90,7 +85,7 @@ void leerArchivo(string fileName){
 
 	numBoxes=(file.size() - (endTable+1));
 	
-	agent = new AgenteIDFS(file.size() - (endTable+1),pos,cajasInit,&table);	
+	agent = new AgenteBFS(file.size() - (endTable+1),pos,cajasInit,&table);	
 
 }
 
@@ -98,25 +93,10 @@ void leerArchivo(string fileName){
 
 int main(int argc, char **argv){
 
-	leerArchivo("nivel1.txt");
-
-	cout << "Campo de juego:" << endl;
-
-	for (int i = 0; i < table.size(); i++){
-		cout << table[i] << endl;
-	}
-	cout << "Posicion del jugador [Fila, Columna]: "  << "[" << pos[0] << "," << pos[1] << "]"  << endl;
-	
-	cout << "Posicion de las cajas [Fila, Columna]: ";
-	for (int i = 0; i < numBoxes; i++){
-		cout << "[" << cajasInit[i][0] << "," << cajasInit[i][1] << "] " ;
-	}
-
-	cout << endl << endl;
+	leerArchivo("nivel4.txt");
 
 	agent->identifyTargets();
 
 	agent->iniciarBusqueda();
-	
 
 }
