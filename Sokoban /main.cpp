@@ -95,8 +95,6 @@ void leerArchivo(string fileName){
 int main(int argc, char **argv){
 
 	leerArchivo(argv[1]);
-
-
 		
 	agentBFS = new AgenteBFS(numBoxes,pos,cajasInit,&table);
 	agentBFS->identifyTargets();
