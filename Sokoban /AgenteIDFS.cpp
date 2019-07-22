@@ -158,7 +158,7 @@ void AgenteIDFS::expandNode(){
 		
 		int** boxes =moveBox(actualNode,pos,'R');
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-R"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-R:Derecha \n"));
 			nodes.push(node);
 		}
 	}	
@@ -173,7 +173,7 @@ void AgenteIDFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'L');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-L"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-L:Izquierda \n"));
 			nodes.push(node);
 		}
 	}
@@ -187,7 +187,7 @@ void AgenteIDFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'D');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-D"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-D:Abajo \n"));
 			nodes.push(node);
 		}
 	}
@@ -201,7 +201,7 @@ void AgenteIDFS::expandNode(){
 		int** boxes =moveBox(actualNode,pos,'U');
 		
 		if(checkExplored(pos,boxes)){
-			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U"));
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U:Arriba \n"));
 			nodes.push(node);
 		}
 	}
@@ -226,15 +226,12 @@ bool AgenteIDFS::isSolve(){
 }
 
 
-void AgenteIDFS::iniciarBusqueda(){
+string AgenteIDFS::iniciarBusqueda(){
 
 	deepLimit=0;
 
 		
 	while(!isSolve()){
-
-		//cout << "Profundidad: " << nodes.top()->getProf() << endl;
-		cout << "Profundidad: " << deepLimit << endl;
 
 		if(nodes.top()->getProf()<deepLimit)expandNode();	
 		else nodes.pop();
@@ -252,7 +249,7 @@ void AgenteIDFS::iniciarBusqueda(){
 	}
 	
 
-	cout << "CAMINO:" << endl;
-	cout <<	nodes.top()->getPath() << endl; 
+	
+	return nodes.top()->getPath(); 
 	
 }
