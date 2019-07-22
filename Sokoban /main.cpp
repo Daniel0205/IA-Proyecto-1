@@ -6,7 +6,9 @@
 #include <vector>
 #include <sstream>
 #include "Nodo.h"
-#include "Agente.h"
+#include "AgenteBFS.h"
+#include "AgenteDFS.h"
+#include "AgenteIDFS.h"
 
 using namespace std;
 
@@ -14,7 +16,7 @@ int numBoxes;
 
 vector <string> table;
 
-Agente * agent; 
+AgenteBFS * agent; 
 
 void leerArchivo(string fileName){
 		
@@ -83,7 +85,7 @@ void leerArchivo(string fileName){
 
 	numBoxes=(file.size() - (endTable+1));
 	
-	agent = new Agente(file.size() - (endTable+1),pos,cajasInit,&table);	
+	agent = new AgenteBFS(file.size() - (endTable+1),pos,cajasInit,&table);	
 
 }
 
@@ -96,6 +98,5 @@ int main(int argc, char **argv){
 	agent->identifyTargets();
 
 	agent->iniciarBusqueda();
-
 
 }

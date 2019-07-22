@@ -1,5 +1,5 @@
-#ifndef AGENTE_H
-#define AGENTE_H
+#ifndef AGENTEBFS_H
+#define AGENTEBFS_H
 #include <string>
 #include <vector>
 //#include <stack>
@@ -10,17 +10,19 @@
 
 using namespace std;
 
-class Agente{
+class AgenteBFS{
     private:
         vector <string> table;
         queue <Nodo *> nodes;
+        vector <Nodo *> explored;
         //stack <Nodo *> nodesProf;
         int numBoxes;
         int **targets;
 
+
     public:
-        Agente(int numBoxesIn, int* pos, int ** cajasInit,vector <string> * table);
-        ~Agente();
+        AgenteBFS(int numBoxesIn, int* pos, int ** cajasInit,vector <string> * table);
+        ~AgenteBFS();
         void identifyTargets();
         bool searchBox(int posF, int posC, Nodo * node);
         bool expand(Nodo * node ,char move);
@@ -28,6 +30,8 @@ class Agente{
         bool checkObstacle(int posF,int posC,Nodo * node);
         bool isSolve();
         void expandNode();
+        bool checkExplored(int* pos, int ** boxes);
+        bool checkExploredBoxes(Nodo * node, int ** boxes);
 
         void iniciarBusqueda();
        

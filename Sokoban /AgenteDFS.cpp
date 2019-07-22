@@ -1,6 +1,6 @@
-#include "Agente.h"
+#include "AgenteDFS.h"
 
-Agente::Agente(int numBoxesIn, int* pos, int ** cajasInit,vector<string> *tableIn){	
+AgenteDFS::AgenteDFS(int numBoxesIn, int* pos, int ** cajasInit,vector<string> *tableIn){	
 	table=*tableIn;
     numBoxes=numBoxesIn;
 	
@@ -10,21 +10,21 @@ Agente::Agente(int numBoxesIn, int* pos, int ** cajasInit,vector<string> *tableI
 	nodes.push(node);
 }
 
-Agente::~Agente(){}
+AgenteDFS::~AgenteDFS(){}
 
-//Esta función identifica las posiciones de los objetivos a los que deben llegar las cajas
-void Agente::identifyTargets(){
+void AgenteDFS::identifyTargets(){
 	
 	int band=0;
 
 	targets = new int*[numBoxes];
+	for (int i = 0; i < numBoxes; i++){
+		targets[i] = new int[2];
+	}
+	
 
 	for (int i = 0; i < table.size(); i++){
 		for (int j = 0; j < table[i].size(); j++){
-
 			if (table[i][j]=='X'){
-
-				targets[band] = new int[2];
 
 				targets[band][0] = i;
 				targets[band][1] = j;
@@ -37,16 +37,8 @@ void Agente::identifyTargets(){
 	
 }
 
-bool Agente::searchBox(int posF, int posC, Nodo * node){
+bool AgenteDFS::searchBox(int posF, int posC, Nodo * node){
 
-	//cout << "profundidad:" <<  node->getProf() <<endl;
-	/*
-	for (int  i = 0; i < numBoxes; i++){
-		
-		cout << node->getPosBoxes(i,0) << "-" << node->getPosBoxes(i,1) << endl;
-	}
- */	
-	
 	for (int i = 0; i < numBoxes; i++){
 		
 		if(node->getPosBoxes(i,0)==posF && node->getPosBoxes(i,1)==posC)return true;
@@ -55,16 +47,17 @@ bool Agente::searchBox(int posF, int posC, Nodo * node){
 	return false;
 }
 
-bool Agente::checkObstacle(int posF,int posC,Nodo * node){
+bool AgenteDFS::checkObstacle(int posF,int posC,Nodo * node){
 	if(posF<0 || posC<0 || posF>=table.size() || posC>=table[0].length())return true;
 	else if(table[posF][posC]=='W' || searchBox(posF,posC, node)){
 		return true;
 	}
 	else return false;
 
+
 }
 
-bool Agente::expand(Nodo * node ,char move){
+bool AgenteDFS::expand(Nodo * node ,char move){
 
 	switch (move){
 		case 'R':
@@ -95,7 +88,7 @@ bool Agente::expand(Nodo * node ,char move){
 }
 
 
-int** Agente::moveBox(Nodo * node,int * pos,char accion){
+int** AgenteDFS::moveBox(Nodo * node,int * pos,char accion){
 	int ** newBoxes = new int *[numBoxes];
 	
 	for (int i = 0; i < numBoxes; i++){
@@ -125,23 +118,46 @@ int** Agente::moveBox(Nodo * node,int * pos,char accion){
 	return newBoxes;
 }
 
+bool AgenteDFS::checkExploredBoxes(Nodo * node, int ** boxes){
+	for (int  i = 0; i < numBoxes; i++){
+		if(node->getPosBoxes(i,0)!=boxes[i][0] || node->getPosBoxes(i,1)!=boxes[i][1]) return false;
+	}
+	return true;
+}
 
 
-void Agente::expandNode(){
+bool AgenteDFS::checkExplored(int* pos, int ** boxes){
+
+	for (int i = 0; i < explored.size(); i++){
+		if(explored[i]->getPosPlayer(0)==pos[0] &&
+		   explored[i]->getPosPlayer(1)==pos[1] &&
+		   checkExploredBoxes(explored[i],boxes)
+		   ){
+			return false;
+		}
+	}
+	return true;
+
+}
+
+void AgenteDFS::expandNode(){
 	
-	Nodo * actualNode=nodes.front();
-		
-
+	Nodo * actualNode=nodes.top();
+	
 	nodes.pop();
 
+	
 	if(expand(actualNode,'R')){
 		//cout << "R" << endl;
 		int * pos = new int [2];
 		pos[0]=actualNode->getPosPlayer(0);
 		pos[1]=actualNode->getPosPlayer(1)+1;
-
-		Nodo * node = new Nodo(pos,moveBox(actualNode,pos,'R'),actualNode->getProf()+1,'R',actualNode);
-		nodes.push(node);
+		
+		int** boxes =moveBox(actualNode,pos,'R');
+		if(checkExplored(pos,boxes)){
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-R"));
+			nodes.push(node);
+		}
 	}
 
 	if(expand(actualNode,'L')){
@@ -150,21 +166,29 @@ void Agente::expandNode(){
 		pos[0]=actualNode->getPosPlayer(0);
 		pos[1]=actualNode->getPosPlayer(1)-1;
 
-		Nodo * node = new Nodo(pos,moveBox(actualNode,pos,'L'),actualNode->getProf()+1,'L',actualNode);
-		nodes.push(node);
+		int** boxes =moveBox(actualNode,pos,'L');
+		
+		if(checkExplored(pos,boxes)){
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-L"));
+			nodes.push(node);
+		}
 	}
 	
 	
-
 	if(expand(actualNode,'U')){
 		//cout << "U" << endl;
 		int * pos = new int [2];
 		pos[0]=actualNode->getPosPlayer(0)-1;
 		pos[1]=actualNode->getPosPlayer(1);
 
-		Nodo * node = new Nodo(pos,moveBox(actualNode,pos,'U'),actualNode->getProf()+1,'U',actualNode);
-		nodes.push(node);
+		int** boxes =moveBox(actualNode,pos,'U');
+		
+		if(checkExplored(pos,boxes)){
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-U"));
+			nodes.push(node);
+		}
 	}
+		
 
 	if(expand(actualNode,'D')){
 		//cout << "D" << endl;
@@ -172,19 +196,25 @@ void Agente::expandNode(){
 		pos[0]=actualNode->getPosPlayer(0)+1;
 		pos[1]=actualNode->getPosPlayer(1);
 
-		Nodo * node = new Nodo(pos,moveBox(actualNode,pos,'D'),actualNode->getProf()+1,'D',actualNode);
-		nodes.push(node);
+		int** boxes =moveBox(actualNode,pos,'D');
+		
+		if(checkExplored(pos,boxes)){
+			Nodo * node = new Nodo(pos,boxes,actualNode->getProf()+1,actualNode->getPath().append("-D"));
+			nodes.push(node);
+		}
 	}
+	cout << "entro" <<endl;
+
 
 }
 
-bool Agente::isSolve(){
+bool AgenteDFS::isSolve(){
 	int counting = 0;
 	
 
 	for (int i = 0; i < numBoxes; i++){
 		
-		if(searchBox(targets[i][0],targets[i][1], nodes.front())){
+		if(searchBox(targets[i][0],targets[i][1], nodes.top())){
 			counting++;
 		}
 		
@@ -197,45 +227,21 @@ bool Agente::isSolve(){
 }
 
 
-void Agente::iniciarBusqueda(){
-    
-	cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
+void AgenteDFS::iniciarBusqueda(){
+
+
 
 	for (int i = 0; i < numBoxes; i++){
-		
-		cout << "Posición de la caja "<< i+1 << ": " << nodes.front()->getPosBoxes(i,0) << "-" << nodes.front()->getPosBoxes(i,1) << endl;
-		cout << "Posición del objetivo"<< i+1 << ": " << targets[i][0] << "-" << targets[i][1] << endl;
-		
-	}
-
-	for (int i = 0; i < table.size(); i++){
-		cout << table[i] << endl;
+		cout << targets[i][0] <<"-" << targets[i][1] << endl;
 	}
 	
-
-
 	while(!isSolve()){
-		//cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
+		explored.push_back(nodes.top());
+		cout << "Profundidad: " << nodes.top()->getProf() << endl;
 		expandNode();
-		//cout << "Posición del jugador: " << nodes.front()->getPosPlayer(0) << "-" << nodes.front()->getPosPlayer(1) << endl;
-
-
-
 	}
 
 	cout << "CAMINO:" << endl;
-	nodes.front()->getPath();
+	cout <<	nodes.top()->getPath() << endl; 
 	
-	/*
-	for (int i = 0; i < nodes.size(); i++){
-		for (int j = 0; j < numBoxes; j++){
-			cout << "Posición de la caja "<< j+1 << ": " << nodes.front()->getPosBoxes(j,0) << "-" << nodes.front()->getPosBoxes(j,1) << endl;
-		}
-		cout << "--------------------" << endl;
-		
-		nodes.pop();
-		i--;
-		
-	}	*/
-
 }
