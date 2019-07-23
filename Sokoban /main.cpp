@@ -1,3 +1,11 @@
+/*
+Sokoban
+
+Integrantes:
+Daniel Alejandro Diaz: 1629338
+Liliana Narvaez: 1530302
+Steban Cadena Giraldo: 1670129
+*/
 #include <iostream>
 #include <stdlib.h>
 #include <fstream>
