@@ -10,35 +10,67 @@ class HexAgent extends Agent {
         this.tree=[];
         this.size=0;
         this.board=[];
+        this.check=[];
         
     }
+
+
 
     expandNode(type,father){
         
         for (let i = 0; i < this.size; i++) {
-            let auxBoard=this.board.slice(0,this.size);
-            for (let j = 0; j < this.size; j++) {
+            
+            for (let j = 0; j < this.size-2; j++) {
                 if(this.board[i][j]==0){
-                    auxBoard[i][j]==this.getID();
-                    this.tree.unshift(new Node(father,auxBoard,type,father.getDepth()+1));
-                    
+                    this.tree.unshift(new Node(father,father.getBoard().slice(),type,father.getDepth()+1));
+                    this.tree[0].setPlay(i,j,this.getID());
                 }
             }
         }
     }
 
+    arraysEqual(arr1, arr2) {
+
+        for(var i = arr1.length; i--;) {
+            for(var j = arr1.length; j--;) {
+                if(arr1[i][j] !== arr2[i][j]) return false;
+            }
+        }
+    
+        return true;
+    }
+
+    isExplored(board){
+        for (let i = 0; i < this.check.length; i++) {
+            if(this.arraysEqual(board,this.check[i].getBoard())){
+
+                return false;            
+
+            }
+        }
+        return true;
+    }
+
+
     miniMax(){
         while(this.tree!=0){
             let actualNode=this.tree.shift();
+            
+            //console.log(actualNode);
+            //console.log(this.check);
 
             if(actualNode.getDepth()==9){
-                console.log(this.tree)
+                //console.log(actualNode);
                 actualNode.calculateHeuristic();        
                 actualNode.informFather();
             }
-            else{
+            else if(this.isExplored(actualNode.getBoard())){
+                console.log("expandio");
+               /* console.log(actualNode);*/
                 if(actualNode.getType()=="Max")this.expandNode("Min",actualNode);
-                else this.expandNode("Max",actualNode);
+                else  this.expandNode("Max",actualNode);
+
+                this.check.push(actualNode);
             }
                 
         }
@@ -53,6 +85,9 @@ class HexAgent extends Agent {
     send() {
         this.board = this.perception;
         this.size = this.board.length;
+        
+       // console.log("TABLERO INICAIL")
+        console.log( this.perception)
 
         this.tree.unshift(new Node(null,this.board,"Max",0));
         

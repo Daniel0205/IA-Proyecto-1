@@ -12,6 +12,15 @@ export default class Node{
         
     }
 
+    setPlay(i,j,k){
+        this.state[i][j]=k
+    }
+
+
+    getBoard(){
+        return this.state;
+    }
+
     getDepth(){
         return this.depth;
     }
@@ -23,6 +32,7 @@ export default class Node{
     setUtility(value){
         if(this.type=="Min")this.utility=Math.min(value,this.utility);
         else this.utility=Math.max(value,this.utility)
+        if(this.father!=null)this.father.informFather();
     }
 
     informFather(){
