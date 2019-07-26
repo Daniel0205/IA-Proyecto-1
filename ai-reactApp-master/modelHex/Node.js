@@ -1,15 +1,38 @@
 
 
 
-class Node{
-    constructor(father,position,type,profundidad){
+export default class Node{
+    constructor(father,state,type,depth){
         this.father=father;
-        this.position=position;
+        this.state=state;
         this.type=type;
-        this.profundidad=profundidad;
-        this.utilidad=Infinity;
+        this.depth=depth;
+        this.utility=Infinity;
+        
         
     }
+
+    getDepth(){
+        return this.depth;
+    }
+
+    getType(){
+        return this.type;
+    }
+
+    setUtility(value){
+        if(this.type=="Min")this.utility=Math.min(value,this.utility);
+        else this.utility=Math.max(value,this.utility)
+    }
+
+    informFather(){
+        this.father.setUtility(this.utility);
+    }
+
+    calculateHeuristic(){
+        this.utility=10;
+    }
+
 
 
 

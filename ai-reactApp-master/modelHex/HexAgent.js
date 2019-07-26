@@ -1,8 +1,47 @@
 const Agent = require('ai-agents').Agent;
 
+import Node from "./Node"
+
+
+
 class HexAgent extends Agent {
     constructor(value) {
         super(value);
+        this.tree=[];
+        this.size=0;
+        this.board=[];
+        
+    }
+
+    expandNode(type,father){
+        
+        for (let i = 0; i < this.size; i++) {
+            let auxBoard=this.board.slice(0,this.size);
+            for (let j = 0; j < this.size; j++) {
+                if(this.board[i][j]==0){
+                    auxBoard[i][j]==this.getID();
+                    this.tree.unshift(new Node(father,auxBoard,type,father.getDepth()+1));
+                    
+                }
+            }
+        }
+    }
+
+    miniMax(){
+        while(this.tree!=0){
+            let actualNode=this.tree.shift();
+
+            if(actualNode.getDepth()==9){
+                console.log(this.tree)
+                actualNode.calculateHeuristic();        
+                actualNode.informFather();
+            }
+            else{
+                if(actualNode.getType()=="Max")this.expandNode("Min",actualNode);
+                else this.expandNode("Max",actualNode);
+            }
+                
+        }
     }
     
     /**
@@ -12,19 +51,25 @@ class HexAgent extends Agent {
      * Example: [1, 1]
      */
     send() {
-        let board = this.perception;
-        let size = board.length;
-        let available = getEmptyHex(board);
-        let nTurn = size * size - available.length;
+        this.board = this.perception;
+        this.size = this.board.length;
+
+        this.tree.unshift(new Node(null,this.board,"Max",0));
+        
+
+        this.miniMax();
+
+        let available = getEmptyHex(this.board);
+        let nTurn = this.size * this.size - available.length;
 
         if (nTurn == 0) { // First move
-            return [Math.floor(size / 2), Math.floor(size / 2) - 1];
+            return [Math.floor(this.size / 2), Math.floor(this.size / 2) - 1];
         } else if (nTurn == 1){
-            return [Math.floor(size / 2), Math.floor(size / 2)];
+            return [Math.floor(this.size / 2), Math.floor(this.size / 2)];
         }
 
         let move = available[Math.round(Math.random() * ( available.length -1 ))];
-        return [Math.floor (move / board.length), move % board.length];
+        return [Math.floor (move / this.board.length), move % this.board.length];
     }
 
 }
