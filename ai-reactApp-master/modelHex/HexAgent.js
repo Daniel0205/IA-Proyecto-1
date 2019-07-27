@@ -56,8 +56,14 @@ class HexAgent extends Agent {
 
         this.tree.unshift(new Node(null,this.board,"Max",0));
         
+        console.log("Inicia a calcular la heuristica de un nodo")
 
-        this.miniMax();
+        let actualNode=this.tree.shift();
+        actualNode.calculateHeuristic(this.getID());
+         
+        console.log("Termina de calcular la heuristica de un nodo")
+        
+        //this.miniMax();
 
         let available = getEmptyHex(this.board);
         let nTurn = this.size * this.size - available.length;
