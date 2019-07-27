@@ -43,19 +43,15 @@ export default class Node{
             this.informFather();
         }
         else if(this.utility==value ){
+            //console.log([row,column])
             this.fila=row;
             this.columna=column;
         }
 
     }
 
-    setFC(fila,columna){
-        this.fila=fila;
-        this.columna=columna;
-    }
-
     informFather(){
-    
+        //if(this.depth==1)console.log(this);
         this.father.setUtility(this.utility,this.fila,this.columna);
     }
 

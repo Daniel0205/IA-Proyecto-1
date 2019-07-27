@@ -49,10 +49,18 @@ class HexAgent extends Agent {
             
             for (let j = 0; j < this.size; j++) {
                 let aux = father.getBoard().map(function (arr) { return arr.slice(); });
-                if(this.board[i][j]==0){
-                    aux[i][j]=this.getID();
+                if(aux[i][j]===0){ //&& (father.getDepth()!==0 || i!== Math.floor(this.size / 2) || j !== Math.floor(this.size / 2))){
+
+
+                    if(type=="Max")aux[i][j]=this.getID();
+                    else if(type=="Min"){
+                        if(this.getID()=="1")aux[i][j]="2";
+                        else aux[i][j]="1"
+                    }
+                    
+                    
                     if(this.isExplored(father.getBoard())) this.tree.unshift(new Node(father,aux,type,father.getDepth()+1,i,j));
-                    if(father.getDepth()+1==1)console.log(this.tree[0])
+                   // if(father.getDepth()+1==1)console.log(this.tree[0])
                 }
             }
         }
@@ -67,6 +75,7 @@ class HexAgent extends Agent {
 
             
             if(actualNode.getDepth()==3){
+               // console.log(actualNode)
                 actualNode.calculateHeuristic();        
                 actualNode.informFather();
             }
@@ -77,6 +86,7 @@ class HexAgent extends Agent {
                 this.check.push(actualNode);
             }   
         }
+        this.check=[];
     }
     
     /**
@@ -89,10 +99,11 @@ class HexAgent extends Agent {
         this.board = this.perception.map(function (arr) { return arr.slice(); })
         this.size = this.board.length;
 
-        console.log(this.board)
+        //console.log(this.board)
 
-        this.tree.unshift(new Node(null,this.board.slice(),"Max",0,null,null));
+        this.tree.unshift(new Node(null,this.perception.map(function (arr) { return arr.slice(); }),"Max",0,null,null));
         this.raiz=this.tree[0];
+        
         
         this.miniMax();
 

@@ -56,6 +56,7 @@ class HexGame extends Problem {
         
         // As first move, the center is forgiven.
         let checkRule0 = true;
+        console.log(this.nTurn);
         if (this.nTurn == 0) {
             if (action[0] === Math.floor(size / 2) 
                 && action[1] === Math.floor(size / 2)) {
@@ -75,6 +76,7 @@ class HexGame extends Problem {
             action[1] = move % board.length;
             board[action[0]][action[1]] = agentID;
         }
+        this.nTurn++
     }
 
     /**
