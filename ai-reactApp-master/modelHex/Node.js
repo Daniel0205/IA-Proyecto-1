@@ -29,11 +29,11 @@ export default class Node{
 
     calculateHeuristic(player){
 
-        console.log(this.state);
+        //console.log(this.state);
 
-        let prueba = [[0,"1","1",0,0],[0,0,0,"2",0],[0,0,0,0,0],[0,0,0,"2",0],[0,0,0,0,0]]
+        let prueba = [[0,"2","1",0,"1"],[0,0,0,"2","1"],[0,0,0,0,"1"],[0,0,0,"2","1"],[0,0,"1",0,0]]
         let prove = this.shortestPath(prueba,"2");
-        console.log(prove);
+        //console.log(prove);
         /*
         if (this.type == "Max") this.utility=this.shortestPath(this.transpose(this.state)).length - this.shortestPath(this.state).length ;
         else this.utility=this.shortestPath(this.state).length-this.shortestPath(this.transpose(this.state)).length;
@@ -48,11 +48,12 @@ export default class Node{
             for (let j = 0; j < size; j++) {
 
                 let key = i*size + j;
-                //let neighbors = this.getNeighborhood(key,board,player);
-                let neighbors = {};
-                neighbors[9+'']=0;
-                console.log("Vecinooooooo ",neighbors);
+                let neighbors = this.getNeighborhood(key,board,player);
+               /* let neighbors = {};
+                neighbors[9+'']=0;*/
 
+                //console.log("Vecinooooooo ",neighbors);
+               
                 if (j === 0) { 
                     if (board[i][j]===0) {
                         neighbors['L'] = 1; 
@@ -67,6 +68,8 @@ export default class Node{
                         neighbors['R'] = 0; 
                     }
                 }
+
+
                 
                 graph.addNode(key+'',neighbors); 
                 
@@ -91,11 +94,13 @@ export default class Node{
     
         graph.addNode('L', neighborsL);
         graph.addNode('R', neighborsR)
-
+/*
         console.log(neighborsL);
         console.log(neighborsR);
-        
-        return graph.path('L','R');
+        */
+       console.log("graph.path('L','R')");
+       console.log(graph.path('L','R',{cost:true}));
+        return graph.path('L','R',{cost:true});
     
     }
 
@@ -110,10 +115,10 @@ export default class Node{
         if(this.insertNeighbor(row-1,col)){
             let name = (row-1)*size + col;
             if(board[row-1][col]=== 0){
-                result[name+'']=1;
+                result[name+'']=2;
             }else if(board[row-1][col]=== player){
                 console.log("entro");
-                result[name+''] = 0;
+                result[name+''] = 1;
             }
         }
 
@@ -121,54 +126,53 @@ export default class Node{
             let name = (row-1)*size + (col+1);
             if(board[row-1][col+1]=== 0){
 
-                result[name+'']=1;
+                result[name+'']=2;
             }else if(board[row-1][col+1]=== player){
                 console.log("entro");
-                result[name+'']= 0;
+                result[name+'']= 1;
             }
         }
         
         if(this.insertNeighbor(row,col+1)){
             let name = (row)*size + (col+1);
             if(board[row][col+1]=== 0){
-                result[name+'']=1;
+                result[name+'']=2;
             }else if(board[row][col+1]=== player){
                 console.log("entro");
-                result[name+''] = 0;
+                result[name+''] = 1;
             }
         }
 
         if(this.insertNeighbor(row+1,col)){
             let name = (row+1)*size + col;
             if(board[row+1][col]=== 0){
-                result[name+'']=1;
+                result[name+'']=2;
             }else if(board[row+1][col]=== player){
                 console.log("entro");
-                result[name+''] = 0;
+                result[name+''] = 1;
             }
         }
 
         if(this.insertNeighbor(row+1,col-1)){
             let name = (row+1)*size + (col-1);
             if(board[row+1][col-1]=== 0){
-                result[name+'']=1;
+                result[name+'']=2;
             }else if(board[row+1][col-1]=== player){
                 console.log("entro");
-                result[name+''] = 0;
+                result[name+''] = 1;
             }
         }
 
         if(this.insertNeighbor(row-1,col-1)){
             let name = (row-1)*size + (col-1);
             if(board[row][col-1]=== 0){
-                result[name+'']=1;
+                result[name+'']=2;
             }else if(board[row][col-1]=== player){
                 console.log("entro");
-                result[name+''] = 0;
+                result[name+''] = 1;
             }
         }
 
-        
         
        return result;
     }
