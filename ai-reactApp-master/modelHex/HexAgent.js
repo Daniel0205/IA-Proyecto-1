@@ -11,23 +11,13 @@ class HexAgent extends Agent {
         this.size=0;
         this.board=[];
         this.check=[];
-        
+
+        this.expandNode=this.expandNode.bind(this)
+        this.arraysEqual=this.arraysEqual.bind(this)
+        this.isExplored=this.isExplored.bind(this)
+        this.miniMax=this.miniMax.bind(this);
     }
 
-
-
-    expandNode(type,father){
-        
-        for (let i = 0; i < this.size; i++) {
-            
-            for (let j = 0; j < this.size-2; j++) {
-                if(this.board[i][j]==0){
-                    this.tree.unshift(new Node(father,father.getBoard().slice(),type,father.getDepth()+1));
-                    this.tree[0].setPlay(i,j,this.getID());
-                }
-            }
-        }
-    }
 
     arraysEqual(arr1, arr2) {
 
@@ -51,28 +41,38 @@ class HexAgent extends Agent {
         return true;
     }
 
+    expandNode(type,father){
+        
+        
+        for (let i = 0; i < this.size; i++) {
+            
+            for (let j = 0; j < this.size; j++) {
+                let aux = father.getBoard().map(function (arr) { return arr.slice(); });
+                if(this.board[i][j]==0){
+                    aux[i][j]=this.getID();
+                    if(this.isExplored(father.getBoard())) this.tree.unshift(new Node(father,aux,type,father.getDepth()+1,i,j));
+                }
+            }
+        }
+
+    }
+
 
     miniMax(){
-        while(this.tree!=0){
+        while(this.tree.length!=0){
+
             let actualNode=this.tree.shift();
             
-            //console.log(actualNode);
-            //console.log(this.check);
-
-            if(actualNode.getDepth()==9){
-                //console.log(actualNode);
+            if(actualNode.getDepth()==3){
                 actualNode.calculateHeuristic();        
                 actualNode.informFather();
             }
-            else if(this.isExplored(actualNode.getBoard())){
-                console.log("expandio");
-               /* console.log(actualNode);*/
+            else {
                 if(actualNode.getType()=="Max")this.expandNode("Min",actualNode);
                 else  this.expandNode("Max",actualNode);
 
                 this.check.push(actualNode);
-            }
-                
+            }   
         }
     }
     
@@ -83,15 +83,11 @@ class HexAgent extends Agent {
      * Example: [1, 1]
      */
     send() {
-        this.board = this.perception;
+        this.board = this.perception.map(function (arr) { return arr.slice(); })
         this.size = this.board.length;
-        
-       // console.log("TABLERO INICAIL")
-        console.log( this.perception)
 
-        this.tree.unshift(new Node(null,this.board,"Max",0));
+        this.tree.unshift(new Node(null,this.board.slice(),"Max",0,null,null));
         
-
         this.miniMax();
 
         let available = getEmptyHex(this.board);
