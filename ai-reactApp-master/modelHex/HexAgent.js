@@ -11,6 +11,7 @@ class HexAgent extends Agent {
         this.size=0;
         this.board=[];
         this.check=[];
+        this.raiz;
 
         this.expandNode=this.expandNode.bind(this)
         this.arraysEqual=this.arraysEqual.bind(this)
@@ -51,10 +52,10 @@ class HexAgent extends Agent {
                 if(this.board[i][j]==0){
                     aux[i][j]=this.getID();
                     if(this.isExplored(father.getBoard())) this.tree.unshift(new Node(father,aux,type,father.getDepth()+1,i,j));
+                    if(father.getDepth()+1==1)console.log(this.tree[0])
                 }
             }
         }
-
     }
 
 
@@ -62,6 +63,8 @@ class HexAgent extends Agent {
         while(this.tree.length!=0){
 
             let actualNode=this.tree.shift();
+           // console.log(actualNode)
+
             
             if(actualNode.getDepth()==3){
                 actualNode.calculateHeuristic();        
@@ -86,11 +89,17 @@ class HexAgent extends Agent {
         this.board = this.perception.map(function (arr) { return arr.slice(); })
         this.size = this.board.length;
 
+        console.log(this.board)
+
         this.tree.unshift(new Node(null,this.board.slice(),"Max",0,null,null));
+        this.raiz=this.tree[0];
         
         this.miniMax();
 
-        let available = getEmptyHex(this.board);
+        console.log(this.raiz.getPos());
+        
+        return this.raiz.getPos()
+/*        let available = getEmptyHex(this.board);
         let nTurn = this.size * this.size - available.length;
 
         if (nTurn == 0) { // First move
@@ -100,7 +109,7 @@ class HexAgent extends Agent {
         }
 
         let move = available[Math.round(Math.random() * ( available.length -1 ))];
-        return [Math.floor (move / this.board.length), move % this.board.length];
+        return [Math.floor (move / this.board.length), move % this.board.length];*/
     }
 
 }
