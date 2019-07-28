@@ -326,7 +326,7 @@ class Node{
         */
        //console.log(graph.path('L','R',{cost:true}));
     //   console.log(graph.path('L','R',{cost:true}));
-       return graph.path('L','R',{cost:true});
+       return graph.path('L','R');
     
     }
 
