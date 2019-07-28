@@ -72,9 +72,13 @@ class HexAgent extends Agent {
     miniMaxPoda(player,alfa,beta){
 
         if(player.getDepth()==3){
-             player.calculateHeuristic();        
+             player.calculateHeuristic(this.getID());        
              player.informFather();
              let utility = player.getUtility();
+            /* console.log("alfa: ",alfa)
+             console.log("beta: ",beta)
+             console.log("utilidad: ",utility)
+             */
              return utility;
         }
         let hijos=[]
@@ -222,25 +226,29 @@ class Node{
         let optPath = this.shortestPath(matxTrp,player);
         let plyPath = this.shortestPath(this.state,player);
 
-        let oponentPath = this.pathLength(optPath,matxTrp,player);
-        let playerPath = this.pathLength(plyPath,this.state,player)
 
-        if(oponentPath <= 0){
-            console.log("oponentPath")
-            console.log(matxTrp)
-            console.log(oponentPath)
-            this.utility = -Infinity;
-        }else if(playerPath <= 0){
-            console.log("playerPath")
-            console.log(this.state)
-            console.log(playerPath)
-            this.utility = Infinity;
+
+        if(plyPath===null){
+
+            this.utility = -101;
+        }else if(optPath===null){
+
+            this.utility = 101;
         }else{
-            if (this.type == "Max"){
-                this.utility = oponentPath - playerPath;
-            } else{
-                this.utility=playerPath - oponentPath;
-            }
+
+            let oponentPath = this.pathLength(optPath,matxTrp,player);
+            let playerPath = this.pathLength(plyPath,this.state,player)
+            
+			if(playerPath<=0){
+				this.utility = 100;
+				
+			}else if(oponentPath<=0){
+				this.utility = -100;
+			}
+            else {
+				this.utility = oponentPath - playerPath;
+			}
+
         }
         
     }
@@ -274,6 +282,7 @@ class Node{
     shortestPath(board,player){
         const graph = new Graph();
         let size = board.length;
+        
 
    
         for (let i = 0; i < size; i++) {
@@ -325,7 +334,7 @@ class Node{
         console.log(neighborsR);
         */
        //console.log(graph.path('L','R',{cost:true}));
-    //   console.log(graph.path('L','R',{cost:true}));
+       //console.log(graph.path('L','R',{cost:true}));
        return graph.path('L','R');
     
     }
