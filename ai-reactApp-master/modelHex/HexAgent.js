@@ -44,6 +44,7 @@ class HexAgent extends Agent {
     }
 
     expandNode(type,father){
+        var sons = []
         
         
         for (let i = 0; i < this.size; i++) {
@@ -60,11 +61,49 @@ class HexAgent extends Agent {
                     }
                     
                     
-                    if(this.isExplored(father.getBoard())) this.tree.unshift(new Node(father,aux,type,father.getDepth()+1,i,j));
+                    if(this.isExplored(father.getBoard())) sons.unshift(new Node(father,aux,type,father.getDepth()+1,i,j));
                    // if(father.getDepth()+1==1)console.log(this.tree[0])
                 }
             }
         }
+        return sons;
+    }
+
+    miniMaxPoda(player,alfa,beta){
+
+        if(player.getDepth()==3){
+             player.calculateHeuristic();        
+             player.informFather();
+             let utility = player.getUtility();
+             return utility;
+        }
+        let hijos=this.expandNode(player.getType(),player);
+        if(player.getType()==="Max"){
+            for (let i = 0; i < hijos.length; i++) {
+                var puntuacion=this.miniMaxPoda(hijos[i],alfa,beta);
+                if(puntuacion>alfa){
+                    alfa=puntuacion
+                }
+                if(alfa>=beta){
+                    return alfa;
+                }
+            }
+            return alfa;
+        }
+        else{
+            for (let i = 0; i < hijos.length; i++) {
+                var puntuacion=this.miniMaxPoda(hijos[i],alfa,beta);
+                if(puntuacion<beta){
+                    beta=puntuacion
+                }
+                if(alfa>=beta){
+                    return beta;
+                }
+            }
+            return beta;
+
+        }
+
     }
 
 
@@ -90,6 +129,10 @@ class HexAgent extends Agent {
         this.check=[];
     }
     
+
+
+
+    
     /**
      * return a new move. The move is an array of two integers, representing the
      * row and column number of the hex to play. If the given movement is not valid,
@@ -100,30 +143,21 @@ class HexAgent extends Agent {
         this.board = this.perception.map(function (arr) { return arr.slice(); })
         this.size = this.board.length;
 
-        //console.log(this.board)
-        this.tree.unshift(new Node(null,this.board,"Max",0));
+        this.raiz=new Node(null,this.board,"Max",0);
+
+
+/*        this.tree.unshift();
         
-      //  console.log("Inicia a calcular la heuristica de un nodo")
-
         this.tree.unshift(new Node(null,this.perception.map(function (arr) { return arr.slice(); }),"Max",0,null,null));
-        this.raiz=this.tree[0];
-
-        this.miniMax();
-
-        console.log(this.raiz.getPos());
+          console.log(this.raiz.getPos());
         
         return this.raiz.getPos()
-/*        let available = getEmptyHex(this.board);
-        let nTurn = this.size * this.size - available.length;
+*/
+        let num=this.miniMaxPoda(this.raiz,-100,100);
 
-        if (nTurn == 0) { // First move
-            return [Math.floor(this.size / 2), Math.floor(this.size / 2) - 1];
-        } else if (nTurn == 1){
-            return [Math.floor(this.size / 2), Math.floor(this.size / 2)];
-        }
+        console.log([this.raiz.getPos(),this.raiz.getUtility(),num])
 
-        let move = available[Math.round(Math.random() * ( available.length -1 ))];
-        return [Math.floor (move / this.board.length), move % this.board.length];*/
+        return this.raiz.getPos()
     }
 
 }
@@ -291,7 +325,7 @@ class Node{
         console.log(neighborsR);
         */
        //console.log(graph.path('L','R',{cost:true}));
-       console.log(graph.path('L','R',{cost:true}));
+    //   console.log(graph.path('L','R',{cost:true}));
        return graph.path('L','R',{cost:true});
     
     }
