@@ -8,7 +8,6 @@ const Graph = require('node-dijkstra');
 class HexAgent extends Agent {
     constructor(value) {
         super(value);
-        this.tree=[];
         this.size=0;
         this.board=[];
         this.check=[];
@@ -62,7 +61,7 @@ class HexAgent extends Agent {
                     
                     
                     if(this.isExplored(father.getBoard())) sons.unshift(new Node(father,aux,type,father.getDepth()+1,i,j));
-                   // if(father.getDepth()+1==1)console.log(this.tree[0])
+                   
                 }
             }
         }
@@ -77,6 +76,7 @@ class HexAgent extends Agent {
              let utility = player.getUtility();
              return utility;
         }
+        player
         let hijos=this.expandNode(player.getType(),player);
         if(player.getType()==="Max"){
             for (let i = 0; i < hijos.length; i++) {
@@ -106,32 +106,6 @@ class HexAgent extends Agent {
 
     }
 
-
-    miniMax(){
-        while(this.tree.length!=0){
-
-            let actualNode=this.tree.shift();
-           // console.log(actualNode)
-
-            
-            if(actualNode.getDepth()==3){
-               // console.log(actualNode)
-                actualNode.calculateHeuristic();        
-                actualNode.informFather();
-            }
-            else {
-                if(actualNode.getType()=="Max")this.expandNode("Min",actualNode);
-                else  this.expandNode("Max",actualNode);
-
-                this.check.push(actualNode);
-            }   
-        }
-        this.check=[];
-    }
-    
-
-
-
     
     /**
      * return a new move. The move is an array of two integers, representing the
@@ -146,14 +120,9 @@ class HexAgent extends Agent {
         this.raiz=new Node(null,this.board,"Max",0);
 
 
-/*        this.tree.unshift();
-        
-        this.tree.unshift(new Node(null,this.perception.map(function (arr) { return arr.slice(); }),"Max",0,null,null));
-          console.log(this.raiz.getPos());
-        
-        return this.raiz.getPos()
-*/
         let num=this.miniMaxPoda(this.raiz,-100,100);
+
+        this.check=[];
 
         console.log([this.raiz.getPos(),this.raiz.getUtility(),num])
 
