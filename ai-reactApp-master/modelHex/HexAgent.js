@@ -16,7 +16,7 @@ class HexAgent extends Agent {
         this.expandNode=this.expandNode.bind(this)
         this.arraysEqual=this.arraysEqual.bind(this)
         this.isExplored=this.isExplored.bind(this)
-        this.miniMax=this.miniMax.bind(this);
+        this.miniMaxPoda=this.miniMaxPoda.bind(this);
     }
 
 
@@ -53,11 +53,12 @@ class HexAgent extends Agent {
                 if(aux[i][j]===0){ //&& (father.getDepth()!==0 || i!== Math.floor(this.size / 2) || j !== Math.floor(this.size / 2))){
 
 
-                    if(type=="Max")aux[i][j]=this.getID();
-                    else if(type=="Min"){
+                    if(type=="Min")aux[i][j]=this.getID();
+                    else if(type=="Max"){
                         if(this.getID()=="1")aux[i][j]="2";
                         else aux[i][j]="1"
                     }
+                    //console.log(aux)
                     
                     
                     if(this.isExplored(father.getBoard())) sons.unshift(new Node(father,aux,type,father.getDepth()+1,i,j));
@@ -76,8 +77,10 @@ class HexAgent extends Agent {
              let utility = player.getUtility();
              return utility;
         }
-        player
-        let hijos=this.expandNode(player.getType(),player);
+        let hijos=[]
+        if(player.getType()=="Min")hijos=this.expandNode("Max",player);
+        else hijos=this.expandNode("Min",player);
+        
         if(player.getType()==="Max"){
             for (let i = 0; i < hijos.length; i++) {
                 var puntuacion=this.miniMaxPoda(hijos[i],alfa,beta);
@@ -209,18 +212,28 @@ class Node{
     calculateHeuristic(player){
 
         /*
-        let prueba = [[0,"2","1",0,"1"],[0,0,0,"2","1"],[0,0,0,0,"1"],[0,0,0,"2","1"],[0,0,"1",0,0]]
+        let prueba = [[0,"2","1",0,"1"],[0,0,0,"2","1"],[0,0,0,0,"1"],[0,0,0,"2","1"],[0,0,"1",0,0]];
         let prove = this.shortestPath(this.transpose(prueba,"2"),player).cost - this.shortestPath(prueba,"2").cost;
         //console.log(prove);
         return(prove)
         */
 
-        let oponentPath= this.shortestPath(this.transpose(this.state),player).cost;
-        let playerPath = this.shortestPath(this.state,player).cost;
+        let matxTrp = this.transpose(this.state);
+        let optPath = this.shortestPath(matxTrp,player);
+        let plyPath = this.shortestPath(this.state,player);
 
-        if(oponentPath <= 7){
+        let oponentPath = this.pathLength(optPath,matxTrp,player);
+        let playerPath = this.pathLength(plyPath,this.state,player)
+
+        if(oponentPath <= 0){
+            console.log("oponentPath")
+            console.log(matxTrp)
+            console.log(oponentPath)
             this.utility = -Infinity;
-        }else if(oponentPath <= 7){
+        }else if(playerPath <= 0){
+            console.log("playerPath")
+            console.log(this.state)
+            console.log(playerPath)
             this.utility = Infinity;
         }else{
             if (this.type == "Max"){
@@ -230,6 +243,24 @@ class Node{
             }
         }
         
+    }
+
+    pathLength(arr,board, play){
+        let size = arr.length;
+        let boardSz = board.length;
+        let tam = 0;
+
+        for (let i = 1; i < (size-1); i++) {         
+            let key = parseInt(arr[i],10);
+            let x = Math.floor(key / boardSz);
+            let y = key % boardSz;
+
+            if(board[x][y] != play){
+                tam++;
+            }
+        }
+
+        return tam;
     }
 
     getUtility(){
