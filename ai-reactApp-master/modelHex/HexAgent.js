@@ -59,7 +59,9 @@ class HexAgent extends Agent {
         console.log("Inicia a calcular la heuristica de un nodo")
 
         let actualNode=this.tree.shift();
-        actualNode.calculateHeuristic(this.getID());
+        let x = actualNode.calculateHeuristic(this.getID());
+
+        console.log(x);
          
         console.log("Termina de calcular la heuristica de un nodo")
         
