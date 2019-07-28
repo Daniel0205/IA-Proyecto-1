@@ -107,8 +107,7 @@ class HexAgent extends Agent {
 
         this.tree.unshift(new Node(null,this.perception.map(function (arr) { return arr.slice(); }),"Max",0,null,null));
         this.raiz=this.tree[0];
-        
-        
+
         this.miniMax();
 
         console.log(this.raiz.getPos());
@@ -213,13 +212,20 @@ class Node{
         return(prove)
         */
 
-        if (this.type == "Max"){
-            this.utility = this.shortestPath(this.transpose(this.state),player).cost - this.shortestPath(this.state,player).cost;
-        } else{
-            this.utility=this.shortestPath(this.state,player).cost - this.shortestPath(this.transpose(this.state,player)).cost;
-        }
+        let oponentPath= this.shortestPath(this.transpose(this.state),player).cost;
+        let playerPath = this.shortestPath(this.state,player).cost;
 
-        //console.log(this.utility)
+        if(oponentPath <= 7){
+            this.utility = -Infinity;
+        }else if(oponentPath <= 7){
+            this.utility = Infinity;
+        }else{
+            if (this.type == "Max"){
+                this.utility = oponentPath - playerPath;
+            } else{
+                this.utility=playerPath - oponentPath;
+            }
+        }
         
     }
 
@@ -267,14 +273,14 @@ class Node{
     
         for (let i = 0; i < size; i++) {
             if (board[i][0] === 0) {
+                neighborsL[(i * size) + ''] = 2;
+            }else if(board[i][0] === player){
                 neighborsL[(i * size) + ''] = 1;
-            }else if(board[i][0] === 1){
-                neighborsL[(i * size) + ''] = 0;
             }
             if (board[i][size - 1] === 0) {
+                neighborsR[(i * size + size - 1) + ''] = 2;
+            }else if(board[i][size - 1] === player){
                 neighborsR[(i * size + size - 1) + ''] = 1;
-            }else if(board[i][size - 1] === 1){
-                neighborsR[(i * size + size - 1) + ''] = 0;
             }
         }
     
@@ -285,6 +291,7 @@ class Node{
         console.log(neighborsR);
         */
        //console.log(graph.path('L','R',{cost:true}));
+       console.log(graph.path('L','R',{cost:true}));
        return graph.path('L','R',{cost:true});
     
     }
