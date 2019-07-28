@@ -100,17 +100,16 @@ class HexAgent extends Agent {
         this.board = this.perception.map(function (arr) { return arr.slice(); })
         this.size = this.board.length;
 
-        //console.log(this.board)
         this.tree.unshift(new Node(null,this.board,"Max",0));
         
-      //  console.log("Inicia a calcular la heuristica de un nodo")
-
         this.tree.unshift(new Node(null,this.perception.map(function (arr) { return arr.slice(); }),"Max",0,null,null));
         this.raiz=this.tree[0];
-
+        
         this.miniMax();
 
         console.log(this.raiz.getPos());
+
+        console.log("Utilidaaaaaaad ",this.raiz.getUtility());
         
         return this.raiz.getPos()
 /*        let available = getEmptyHex(this.board);
@@ -206,18 +205,22 @@ class Node{
     calculateHeuristic(player){
 
         /*
-        let prueba = [[0,"2","1",0,"1"],[0,0,0,"2","1"],[0,0,0,0,"1"],[0,0,0,"2","1"],[0,0,"1",0,0]]
+        let prueba = [[0,"2","1",0,"1"],[0,0,0,"2","1"],[0,0,0,0,"1"],[0,0,0,"2","1"],[0,0,"1",0,0]];
         let prove = this.shortestPath(this.transpose(prueba,"2"),player).cost - this.shortestPath(prueba,"2").cost;
         //console.log(prove);
         return(prove)
         */
 
-        let oponentPath= this.shortestPath(this.transpose(this.state),player).cost;
-        let playerPath = this.shortestPath(this.state,player).cost;
+        let matxTrp = this.transpose(this.state);
+        let optPath = this.shortestPath(matxTrp,player);
+        let plyPath = this.shortestPath(this.state,player);
 
-        if(oponentPath <= 7){
+        let oponentPath = this.pathLength(optPath,matxTrp,player);
+        let playerPath = this.pathLength(plyPath,this.state,player)
+
+        if(oponentPath <= 0){
             this.utility = -Infinity;
-        }else if(oponentPath <= 7){
+        }else if(playerPath <= 0){
             this.utility = Infinity;
         }else{
             if (this.type == "Max"){
@@ -227,6 +230,24 @@ class Node{
             }
         }
         
+    }
+
+    pathLength(arr,board, play){
+        let size = arr.length;
+        let boardSz = board.length;
+        let tam = 0;
+
+        for (let i = 1; i < (size-1); i++) {         
+            let key = parseInt(arr[i],10);
+            let x = Math.floor(key / boardSz);
+            let y = key % boardSz;
+
+            if(board[x][y] != play){
+                tam++;
+            }
+        }
+
+        return tam;
     }
 
     getUtility(){
@@ -291,8 +312,8 @@ class Node{
         console.log(neighborsR);
         */
        //console.log(graph.path('L','R',{cost:true}));
-       console.log(graph.path('L','R',{cost:true}));
-       return graph.path('L','R',{cost:true});
+       //console.log(graph.path('L','R',{cost:true}));
+       return graph.path('L','R');
     
     }
 
