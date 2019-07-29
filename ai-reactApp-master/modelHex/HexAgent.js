@@ -50,7 +50,7 @@ class HexAgent extends Agent {
             
             for (let j = 0; j < this.size; j++) {
                 let aux = father.getBoard().map(function (arr) { return arr.slice(); });
-                if(aux[i][j]===0){ //&& (father.getDepth()!==0 || i!== Math.floor(this.size / 2) || j !== Math.floor(this.size / 2))){
+                if(aux[i][j]===0){ 
 
 
                     if(type=="Min")aux[i][j]=this.getID();
@@ -58,7 +58,6 @@ class HexAgent extends Agent {
                         if(this.getID()=="1")aux[i][j]="2";
                         else aux[i][j]="1"
                     }
-                    //console.log(aux)
                     
                     
                     if(this.isExplored(father.getBoard())) sons.unshift(new Node(father,aux,type,father.getDepth()+1,i,j));
@@ -75,10 +74,6 @@ class HexAgent extends Agent {
              player.calculateHeuristic(this.getID());        
              player.informFather();
              let utility = player.getUtility();
-            /* console.log("alfa: ",alfa)
-             console.log("beta: ",beta)
-             console.log("utilidad: ",utility)
-             */
              return utility;
         }
         let hijos=[]
@@ -197,11 +192,9 @@ class Node{
         }
         
         if(this.depth!=0){
-            //if(this.father==null)console.log(this.depth);
             this.informFather();
         }
         else if(this.utility==value ){
-            //console.log([row,column])
             this.fila=row;
             this.columna=column;
         }
@@ -209,22 +202,24 @@ class Node{
     }
 
     informFather(){
-        //if(this.depth==1)console.log(this);
         this.father.setUtility(this.utility,this.fila,this.columna);
     }
 
     calculateHeuristic(player){
 
-        /*
-        let prueba = [[0,"2","1",0,"1"],[0,0,0,"2","1"],[0,0,0,0,"1"],[0,0,0,"2","1"],[0,0,"1",0,0]];
-        let prove = this.shortestPath(this.transpose(prueba,"2"),player).cost - this.shortestPath(prueba,"2").cost;
-        //console.log(prove);
-        return(prove)
-        */
 
         let matxTrp = this.transpose(this.state);
-        let optPath = this.shortestPath(matxTrp,player);
+        let optPath ;
         let plyPath = this.shortestPath(this.state,player);
+
+        if(player==="1"){
+            optPath = this.shortestPath(matxTrp,player);
+            plyPath = this.shortestPath(this.state,player);
+        }
+        else{
+            optPath = this.shortestPath(this.state,"1");
+            plyPath = this.shortestPath(matxTrp,"1");
+        }
 
 
 
@@ -235,9 +230,19 @@ class Node{
 
             this.utility = 101;
         }else{
+            
+            let oponentPath;
+            let playerPath;
 
-            let oponentPath = this.pathLength(optPath,matxTrp,player);
-            let playerPath = this.pathLength(plyPath,this.state,player)
+            if(player==="1"){
+                oponentPath = this.pathLength(optPath,matxTrp,player);
+                playerPath = this.pathLength(plyPath,this.state,player);
+            }
+            else{
+                oponentPath = this.pathLength(optPath,this.state,"1");
+                playerPath = this.pathLength(plyPath,matxTrp,"1");                
+            }
+
             
 			if(playerPath<=0){
 				this.utility = 100;
@@ -246,7 +251,10 @@ class Node{
 				this.utility = -100;
 			}
             else {
-				this.utility = oponentPath - playerPath;
+  
+                this.utility = oponentPath - playerPath;
+  
+  
 			}
 
         }
@@ -329,12 +337,7 @@ class Node{
     
         graph.addNode('L', neighborsL);
         graph.addNode('R', neighborsR)
-        /*
-        console.log(neighborsL);
-        console.log(neighborsR);
-        */
-       //console.log(graph.path('L','R',{cost:true}));
-       //console.log(graph.path('L','R',{cost:true}));
+
        return graph.path('L','R');
     
     }
