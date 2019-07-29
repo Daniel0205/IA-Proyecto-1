@@ -126,8 +126,6 @@ class HexAgent extends Agent {
 
         this.check=[];
 
-        console.log([this.raiz.getPos(),this.raiz.getUtility(),num])
-
         return this.raiz.getPos()
     }
 
